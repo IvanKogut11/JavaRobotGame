@@ -80,7 +80,7 @@ public class JIFSaver implements Serializable{ //Changed
 
     private static String getCurrentPath() {
         String filePath = new File("").getAbsolutePath();
-        return filePath.substring(0, filePath.length() - 6) + "robots/src/main/resources/windows.bin";
+        return filePath + "/src/main/resources/windows.bin";
     }
 
 }
