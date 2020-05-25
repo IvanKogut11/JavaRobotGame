@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyVetoException;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.*;
 import javax.swing.event.InternalFrameAdapter;
@@ -11,7 +12,7 @@ import javax.swing.event.InternalFrameEvent;
 
 import main.java.log.Logger;
 
-public class MainApplicationFrame extends JFrame { //CHanged
+public class MainApplicationFrame extends JFrame {
     private final JDesktopPane desktopPane = new JDesktopPane();
     private HashMap<String, JInternalFrame> allFrames = new HashMap<>();
 
@@ -24,7 +25,6 @@ public class MainApplicationFrame extends JFrame { //CHanged
 
         setContentPane(desktopPane);
         setVisible(true);
-        //setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 
         LogWindow logWindow = createLogWindow();
         allFrames.put(logWindow.getTitle(), logWindow);
@@ -44,12 +44,6 @@ public class MainApplicationFrame extends JFrame { //CHanged
                 ExitConfirmDialogue.closeWindow(MainApplicationFrame.this);
             }
         });
-        /*this.addKeyListener(new KeyAdapter() {
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
-                    ExitConfirmDialogue.closeWindow(MainApplicationFrame.this);
-            }
-        });*/
     }
 
     protected GameWindow createGameWindow() {
@@ -136,19 +130,22 @@ public class MainApplicationFrame extends JFrame { //CHanged
     }
 
     private void downloadWindows() { //jif - JInternalFrame
-        HashMap<String, JIFSaver> downloaded = JIFSaver.download();
-        for (String jifName : allFrames.keySet()) {
-            JIFSaver downloadedJIF = downloaded.get(jifName);
-            JInternalFrame jif = allFrames.get(jifName);
+        HashMap<String, JIFSaver> loaded = JIFSaver.loadAll();
+        for (Map.Entry<String, JInternalFrame> jifEntry : allFrames.entrySet()) {
+            String jifName = jifEntry.getKey();
+            JInternalFrame jif = jifEntry.getValue();
+            JIFSaver loadedJIF = loaded.get(jifName);
             addWindow(jif);
-            try {
-                jif.setSize(downloadedJIF.getSize());
-                jif.setLocation(downloadedJIF.getLocation());
-                jif.setIcon(downloadedJIF.getIsIcon());
-            } catch (PropertyVetoException e) { //what is it?
-                System.out.println(e.getMessage());
-            } catch (NullPointerException e) {
+            if (loadedJIF == null){
                 System.out.println(jifName + " is restored with default settings");
+                continue;
+            }
+            try {
+                jif.setSize(loadedJIF.getSize());
+                jif.setLocation(loadedJIF.getLocation());
+                jif.setIcon(loadedJIF.getIsIcon());
+            } catch (PropertyVetoException e) { //What is it?
+                System.out.println(e.getMessage());
             }
         }
     }

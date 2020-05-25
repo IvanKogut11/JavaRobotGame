@@ -2,9 +2,10 @@ package main.java.gui;
 
 import java.awt.*;
 import java.io.*;
+import java.nio.file.Paths;
 import java.util.HashMap;
 
-public class JIFSaver implements Serializable{ //Changed
+public class JIFSaver implements Serializable{
 
     private static final long serialVersionUID = 1000000007L;
 
@@ -44,10 +45,9 @@ public class JIFSaver implements Serializable{ //Changed
         }
     }
 
-    public static HashMap<String, JIFSaver> download() {
+    public static HashMap<String, JIFSaver> loadAll() {
         HashMap<String, JIFSaver> downloaded = new HashMap<>();
         String filePath = getCurrentPath();
-        System.out.println(filePath);
         try {
             FileInputStream inputStream = new FileInputStream(filePath);
             ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
@@ -79,8 +79,8 @@ public class JIFSaver implements Serializable{ //Changed
     }
 
     private static String getCurrentPath() {
-        String filePath = new File("").getAbsolutePath();
-        return filePath + "/src/main/resources/windows.bin";
+        String workingDir = System.getProperty("user.dir");
+        return Paths.get(workingDir, "savedJIFs.bin").toString();
     }
 
 }
