@@ -1,4 +1,4 @@
-package main.java.gui;
+package main.java.gui.frames;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -10,6 +10,7 @@ import javax.swing.*;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 
+import main.java.gui.JIFSaver;
 import main.java.log.Logger;
 
 public class MainApplicationFrame extends JFrame {
@@ -48,6 +49,7 @@ public class MainApplicationFrame extends JFrame {
 
     protected GameWindow createGameWindow() {
         GameWindow gameWindow = new GameWindow();
+        gameWindow.setLocation(310, 10);
         gameWindow.setSize(400, 400);
         return gameWindow;
     }

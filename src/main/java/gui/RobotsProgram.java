@@ -1,5 +1,7 @@
 package main.java.gui;
 
+import main.java.gui.frames.MainApplicationFrame;
+
 import java.awt.Frame;
 
 import javax.swing.SwingUtilities;
