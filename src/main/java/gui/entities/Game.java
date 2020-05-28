@@ -36,11 +36,11 @@ public class Game extends Observable {
     }
 
     public double getRobotPosX() {
-        return robot.posX;
+        return robot.posX.get();
     }
 
     public double getRobotPosY() {
-        return robot.posY;
+        return robot.posY.get();
     }
 
     public double getRobotDirection() {
@@ -94,10 +94,8 @@ public class Game extends Observable {
         if (pointsToVisit.size() == 0) {
             isTargetSelected = false;
             setChanged();
-            notifyObservers("scoreinc");
-            setChanged();
             notifyObservers("timestop");
-            //notifyObservers();//TODO incrementScore
+            //TODO incrementScore
             return;
         }
         Point curP = pointsToVisit.peekLast();
@@ -174,8 +172,8 @@ public class Game extends Observable {
     }
 
     private void makeModelsInsideWindow() {
-        robot.posX = applyLimits(robot.posX, gameVisualizer.getMinX(), gameVisualizer.getMaxX());
-        robot.posY = applyLimits(robot.posY, gameVisualizer.getMinY(), gameVisualizer.getMaxY());
+        robot.posX.set(applyLimits(robot.posX.get(), gameVisualizer.getMinX(), gameVisualizer.getMaxX()));
+        robot.posY.set(applyLimits(robot.posY.get(), gameVisualizer.getMinY(), gameVisualizer.getMaxY()));
         targetPosX = applyLimits(targetPosX, gameVisualizer.getMinX(), gameVisualizer.getMaxX());
         targetPosY = applyLimits(targetPosY, gameVisualizer.getMinY(), gameVisualizer.getMaxY());
     }
@@ -211,13 +209,13 @@ public class Game extends Observable {
         double prevRobotDir = getRobotDirection();
         robot.moveRobotStraight(velocity, angleToTarget, duration);
         if (!isPointInAnyFence(getRobotPosX(), getRobotPosY())) {
-            robot.posX = applyLimits(robot.posX, gameVisualizer.getMinX(), gameVisualizer.getMaxX());
-            robot.posY = applyLimits(robot.posY, gameVisualizer.getMinY(), gameVisualizer.getMaxY());
+            robot.posX.set(applyLimits(robot.posX.get(), gameVisualizer.getMinX(), gameVisualizer.getMaxX()));
+            robot.posY.set(applyLimits(robot.posY.get(), gameVisualizer.getMinY(), gameVisualizer.getMaxY()));
             robot.direction = angleToTarget;
         }
         else {
-            robot.posX = prevRobotX;
-            robot.posY = prevRobotY;
+            robot.posX.set(prevRobotX);
+            robot.posY.set(prevRobotY);
             robot.direction = prevRobotDir;
         }
     }

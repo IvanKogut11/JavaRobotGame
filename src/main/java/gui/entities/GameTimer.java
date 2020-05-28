@@ -6,12 +6,13 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class GameTimer implements Observer {
 
-    private volatile int time = 0;
+    private AtomicInteger m_time = new AtomicInteger(0);
     private volatile boolean isStopped = true;
-    private volatile int maxTime = 0;
+    private AtomicInteger maxTime = new AtomicInteger(0);
     private volatile Timer timer;
 
     public GameTimer(Timer timer) {
@@ -24,18 +25,18 @@ public class GameTimer implements Observer {
     }
 
     public int getTime() {
-        return time;
+        return m_time.intValue();
     }
 
     public int getMaxTime() {
-        return maxTime;
+        return maxTime.intValue();
     }
 
     private TimerTask timerTask = new TimerTask() {
         @Override
         public void run() {
             if (!isStopped)
-                time++;
+                m_time.incrementAndGet();
         }
     };
 
@@ -44,8 +45,8 @@ public class GameTimer implements Observer {
     }
 
     private void stop() {
-        maxTime = Math.max(time, maxTime);
-        time = 0;
+        maxTime.accumulateAndGet(m_time.intValue(), Math::max);
+        m_time.set(0);
         isStopped = true;
     }
 
